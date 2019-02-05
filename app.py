@@ -1,3 +1,8 @@
+"""
+author: Haosen Wang
+2/2/2019
+"""
+
 from flask import Flask, redirect, request, render_template, url_for
 from flask_script import Manager
 
