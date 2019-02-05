@@ -10,7 +10,7 @@ base_url = 'http://127.0.0.1:5000'
 @app.route('/<int:user_id>',methods=['GET','POST'])
 def home(user_id):
     if request.method == 'GET':
-        return render_template('home.html')
+        return render_template('home.html',user_id=user_id)
     else:
         return redirect(base_url+f'/{user_id}/detail')
 
