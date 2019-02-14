@@ -3,7 +3,7 @@ import java.util.Random;
 import java.io.*;
 
 public class Main {
-    private int[] transactionID={1000000000};
+
 
     private static void generatePersonalData(int i,String folder_path) {
 
@@ -87,7 +87,7 @@ public class Main {
 
     public static void main(String[] args){
 
-        for(int i=0;i<1;i++){
+        for(int i=0;i<15;i++){
             System.out.println("//------------------------------------------");
             String Folder_path=".\\userdata.csv";
             generatePersonalData(i,Folder_path);
