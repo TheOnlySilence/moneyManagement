@@ -152,12 +152,13 @@ public class BankStatementByDay {
 
 
 
-    public void printTransactions(java.lang.String filePath,String userID){
+    public void printTransactions(java.lang.String filePath,String userID,int[] transactionID){
         for(int i=0;i<transactions.size();i++){
-            System.out.println(transactions.get(i).toString());
+            System.out.println(transactions.get(i).toString_forPrint(userID,transactionID));
 
                     try {
-                        this.Output_transactions(userID);
+                        this.Output_transactions(userID,transactionID,i);
+
                     }
                     catch (Exception e) {
                         System.out.println(e);
@@ -173,21 +174,19 @@ public class BankStatementByDay {
 
 
 
-    public void Output_transactions(String userID) throws IOException
+    public void Output_transactions(String userID,int[] transactionID,int i) throws IOException
     {
-        for(int i=0;i<transactions.size();i++){
-
-        String str = transactions.get(i).toString();
+        String str = transactions.get(i).toString_forPrint(userID,transactionID);
         String location =userID+".csv";
         FileWriter fs = null;
         try {
             fs = new FileWriter(location,true);
             fs.write(str + "\n");
+            transactionID[0]=transactionID[0]+1;
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             fs.close();
-        }
         //todo
     }
 

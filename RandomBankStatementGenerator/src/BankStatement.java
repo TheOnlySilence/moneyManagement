@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class BankStatement {
     private int accountLength;
-
+    private int[] transactionID={1000};
     private ArrayList<BankStatementByYear> statement = new ArrayList<BankStatementByYear>();
 
     public BankStatement(ArrayList<BankStatementByYear> statement) {
@@ -11,7 +11,7 @@ public class BankStatement {
 
     public void printStatement(String filePath,String userID){
         for(int i=0;i<statement.size();i++){
-            statement.get(i).printStatement(filePath,userID);
+            statement.get(i).printStatement(filePath,userID,transactionID);
         }
     }
 

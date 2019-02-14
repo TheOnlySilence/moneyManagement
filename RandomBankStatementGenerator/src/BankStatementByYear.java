@@ -34,9 +34,9 @@ public class BankStatementByYear {
         statement[11]= month12;
 
     }
-    public void printStatement(String filePath,String userID){
+    public void printStatement(String filePath,String userID,int[] transactionID){
         for(int i=0;i<12;i++){
-            statement[i].printStatement(filePath,userID);
+            statement[i].printStatement(filePath,userID,transactionID);
 
         }
 

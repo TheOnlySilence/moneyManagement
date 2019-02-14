@@ -42,9 +42,9 @@ public class BankStatementByMonth {
     }
 
 
-    public void printStatement(String filePath,String userID){
+    public void printStatement(String filePath,String userID,int[] transactionID){
     for (int i=0;i<bankstatementByDay.size();i++){
-        bankstatementByDay.get(i).printTransactions(filePath,userID);
+        bankstatementByDay.get(i).printTransactions(filePath,userID,transactionID);
     }
 
 
