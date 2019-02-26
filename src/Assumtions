@@ -1,0 +1,27 @@
+For all user:
+FOOD_MINIMUM=2meals*6dollars*365days=4380
+
+
+
+For Full-time-Student:
+Income: 25000-60000
+HOUSING_MINIMUM=400dollars*12months=4800
+TRANSPORTATION:12months*4weeks*25dollarsforfuel=1200
+
+
+For Full-time-employee:
+Income: 40000-75000
+Transportation: 2019 Accord Sedan 400 per month+12months*4weeks*25dollarsforfuel=6000
+
+
+COMPANY LIST
+FOOD_A FOOD_B FOOD_C
+MALL_A MALL_B MALL_C
+SUPERMARKET_A SUPERMARKET_B SUPERMARKET_C
+
+LOCATION LIST
+CITY_S:StateCollege
+CITY_A:Small city for birthplace
+CITY_B:Big city for birthplace
+CITY_C:Small city for travel
+CITY_D:Big city for travel
