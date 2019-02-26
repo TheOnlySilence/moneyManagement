@@ -1,0 +1,18 @@
+._acc_display2{
+    width : 100%;
+    
+    padding:0;
+    display: block;
+    height: 310px;
+    text-align: center;
+
+}
+
+._content h3{
+    text-align: left;
+    margin: 3% 0 1.5% 0;
+}
+
+.big_table{
+    width: 100%;
+}

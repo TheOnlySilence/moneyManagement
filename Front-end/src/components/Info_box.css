@@ -1,0 +1,15 @@
+._info_box{
+    text-align: left;
+    display: inline-block;
+    float: left;
+    height: auto;
+    width: 30%;
+    border: 1px solid black;
+    margin: 4% 4% 4% 4%;
+    margin-left: 15vw;
+    padding: 0;
+}
+
+._info_box ul li{
+    margin-top: 4%;
+}

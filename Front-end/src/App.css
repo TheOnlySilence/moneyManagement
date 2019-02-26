@@ -1,0 +1,13 @@
+.App *{
+  display: block;
+  background-color: white;
+}
+
+.App{
+  margin: 0;
+  width: 100vw;
+  height: auto;
+  padding-bottom: 5vh;
+  background-color: #F4F4F6;
+}
+

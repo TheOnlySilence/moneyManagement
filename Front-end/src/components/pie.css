@@ -1,0 +1,23 @@
+._content_pie div svg{
+    width: 24vh;
+    height: 15vw;
+    margin-left: 25%;
+    padding: 0;
+    
+}
+._content_pie div{
+    text-align: center;
+}
+
+._content_pie{
+    text-align: center;
+    width: 30%;
+    margin : 0;
+    float: left;
+    }
+
+._content_pie h3{
+    margin: 1% 0 7% 0;
+    width: 100%;
+}
+
