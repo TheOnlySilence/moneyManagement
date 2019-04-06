@@ -5,7 +5,7 @@
 
 
 # input: lst, a python list of data
-# input: month_pred, # of the month needs to be predicted
+# input: month_pred, rth of the month needs to be predicted
 # return: rtn, # of amount spent on the predicted month
 
 
@@ -52,21 +52,22 @@ def prediction(lst, month_pred):
     test.index = test.Timestamp
     test = test.resample('M').sum()
 
-    train.amount.plot(figsize=(18, 8), title='Monthly Amount', fontsize=14)
-    test.amount.plot(figsize=(18, 8), title='Monthly Amount', fontsize=14)
-    plt.show()
+    #train.amount.plot(figsize=(18, 8), title='Monthly Amount', fontsize=14)
+    #test.amount.plot(figsize=(18, 8), title='Monthly Amount', fontsize=14)
+    #plt.show()
 
     y_hat_avg = test.copy()
     model = ExponentialSmoothing(np.asarray(train['amount']), damped=0, seasonal_periods=12, trend='add',
                                  seasonal='add', ).fit()
     y_hat_avg['predict'] = model.forecast(len(test))
-    plt.figure(figsize=(16, 8))
-    plt.plot(train['amount'], label='Train')
-    plt.plot(test['amount'], label='Test')
-    plt.plot(y_hat_avg['predict'], label='predict')
-    plt.legend(loc='best')
-    plt.show()
 
+    #plt.figure(figsize=(16, 8))
+    #plt.plot(train['amount'], label='Train')
+    #plt.plot(test['amount'], label='Test')
+    #plt.plot(y_hat_avg['predict'], label='predict')
+    #plt.legend(loc='best')
+    #plt.show()
+    
     pred = model.forecast(12)
 
     pred_imonth = int(month_pred) - 1

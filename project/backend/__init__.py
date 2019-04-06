@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_restful import Api
-from backend.main.api import User, CreditCardInfo, Transaction, CategoryRatio, CurrentTime,test,Prediction
+from backend.main.api import User, CreditCardInfo, Transaction, CategoryRatio, CurrentTime,test,Prediction,AveMonthlyExp 
 from .main.database import db
 
 def create_app():
@@ -20,5 +20,6 @@ def create_app():
     api.add_resource(CurrentTime,'/currentTime')
     api.add_resource(test,'/test')
     api.add_resource(Prediction,'/<int:UID>/prediction')
+    api.add_resource(AveMonthlyExp,'/<int:UID>/aveMonthlyExp')
 
     return app

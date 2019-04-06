@@ -11,6 +11,7 @@ categoryRatio = reqparse.RequestParser()
 currentTime = reqparse.RequestParser()
 test = reqparse.RequestParser()
 pred = reqparse.RequestParser()
+aveMonthlyExp = reqparse.RequestParser()
 
 
 # UserInfo, CreditCardInfo, Transaction, CategoryRatio, CurrentTime, prediction
@@ -67,10 +68,14 @@ class Transaction(Resource):
                                  help='transaction for particular month, default is latest month')
         transaction.add_argument('recent_transactions', required=False, help='look for recent transaction',
                                  default=False)
+
+        transaction.add_argument('categ', required=False, help='look for particular category, default = all category',
+                                 default=False)
         args = transaction.parse_args()
         year = args['year']
         month = args['month']
         recent_transactions = args['recent_transactions']
+        categ_id = args['categ']
         user = existed(UID)
         if user:
 
@@ -83,7 +88,11 @@ class Transaction(Resource):
             if recent_transactions:
                 data = get_recent_transactions(UID, year, month)
             else:
-                data = get_transactions(UID, year, month)
+
+                if categ_id:
+                    data = get_transactions_by_categ(UID, year,month, categ_id)
+                else:
+                    data = get_transactions(UID, year, month)
 
             transactions = {}
             for i in data:
@@ -185,16 +194,16 @@ class CurrentTime(Resource):
 class Prediction(Resource):
 
     def get(self,UID):
-        pred.add_argument('months',required=True,help=' # of the month needs to be predicted')
+        pred.add_argument('month',required=True,help=' #th of the month needs to be predicted')
         args = pred.parse_args()
-        months = args['months']
+        month = args['month']
         user = existed(UID)
 
         if user:
             transData = ml_data(UID)
-            predData = prediction(transData,months)
+            predData = prediction(transData,month)
             data = {'prediction': predData}
-            status = {'status': 'ok', 'status_message': 'Query was successful'}
+            status = {'status': 'Created', 'status_message': 'Query was successful'}
 
             return {'data': data}, 200, {'status': status}
 
@@ -203,10 +212,65 @@ class Prediction(Resource):
             data = jsonify(data)
             return make_response(data, 404)
 
+class AveMonthlyExp(Resource):
+    def get(self,UID):
+        aveMonthlyExp.add_argument('month',required=True,help='ave exp for which month')
+        args = aveMonthlyExp.parse_args()
+        month = args['month']
+        user = existed(UID)
+        earliest_year = get_earliest_year(UID,month)[0]
+        latest_year = get_latest_year(UID)[0]
+        years = latest_year - earliest_year + 1
+
+
+        if(month == 1):
+            days = 31
+        elif(month == 2):
+            days = 28
+        elif(month == 3):
+            days = 31
+        elif(month == 4):
+            days = 30
+        elif(month == 5):
+            days = 31
+        elif(month == 6):
+            days = 30
+        elif(month == 7):
+            days = 31
+        elif(month == 8):
+            days = 31
+        elif(month == 9):
+            days = 30
+        elif(month == 10):
+            days = 31
+        elif(month == 11):
+            days = 30
+        elif(month == 12):
+            days = 31
+        
+        sum = 0
+        if user:
+            exp = sum_monthly_exp(UID,month)
+            for i in range(0,len(exp)):
+                sum = sum + float(exp[i][0])
+
+            avg = sum/years
+            print(years)
+            data = {'avg': avg}
+            status = {'status': 'Created', 'status_message': 'Query was successful'}
+
+            return {'data': data}, 200, {'status': status}
+
+        else:
+            data = {'auth': 0, 'description': 'user is not existed'}
+            data = jsonify(data)
+            return make_response(data, 404)
+
+
 class test(Resource):
     def get(self):
-        data = ml_data(11)
-        #pred = prediction(transdata,5)
+        data = get_earliest_year(11)
+        print(data)
         data = {'data':data}
         data = jsonify(data)
         return make_response(data, 200)
@@ -214,8 +278,7 @@ class test(Resource):
 
 def existed(user_id):
     query = db.session.query(UserInfo.firstname, UserInfo.lastname, UserInfo.age, UserInfo.gender).filter(
-        UserInfo.UID ==
-        user_id).all()
+        UserInfo.UID == user_id).all()
     return query
 
 
@@ -239,6 +302,19 @@ def get_transactions(user_id, year, month):
 
     return query
 
+def get_transactions_by_categ(user_id, year, month,categ_id):
+    query = db.session.query(TransactionInfo.UID, TransactionInfo.TID, TransactionInfo.T_date, TransactionInfo.T_time,
+                             Company.company_name, Categories.categories, TransactionInfo.amount, TransType.trans_type). \
+        filter(TransactionInfo.UID == user_id). \
+        filter(db.extract('year', TransactionInfo.T_date) == year). \
+        filter(db.extract('month', TransactionInfo.T_date) == month). \
+        filter(TransactionInfo.campany_id == Company.company_id). \
+        filter(TransactionInfo.categories_id == Categories.categories_id). \
+        filter(TransactionInfo.categories_id == categ_id). \
+        filter(TransactionInfo.type_id == TransType.type_id). \
+        order_by(db.desc(TransactionInfo.T_date)).order_by(db.desc(TransactionInfo.T_time)).all()
+
+    return query
 
 def get_recent_transactions(user_id, year, month):
     query = db.session.query(TransactionInfo.UID, TransactionInfo.TID, TransactionInfo.T_date, TransactionInfo.T_time,
@@ -270,6 +346,23 @@ def get_latest_year(user_id):
 
     return query
 
+
+def get_earliest_year(user_id,month):
+    query = db.session.query(db.extract('year', TransactionInfo.T_date)). \
+        filter(TransactionInfo.UID == user_id). \
+            filter(db.extract('month', TransactionInfo.T_date) == month). \
+        order_by(TransactionInfo.T_date).first()
+
+    return query
+
+
+def sum_monthly_exp(user_id,month):
+
+    query = db.session.query(db.func.sum(TransactionInfo.amount)).\
+                filter(db.extract('month',TransactionInfo.T_date) == month).\
+                filter(TransactionInfo.UID == user_id).\
+                group_by(db.extract('day',TransactionInfo.T_date)).all()
+    return query
 
 def ml_data(user_id):
     query = db.session.query(db.extract('year', TransactionInfo.T_date), db.extract('month', TransactionInfo.T_date),
